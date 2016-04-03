@@ -1,0 +1,30 @@
+{
+  "name": "freespeech",
+  "version": "0.0.1",
+  "description": "Free Speech",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dandart/freespeech.git"
+  },
+  "keywords": [
+    "free",
+    "speech",
+    "libre",
+    "anonymous",
+    "escape",
+    "from",
+    "censorship",
+    "crippled",
+    "internet"
+  ],
+  "author": "Dan Dart <github@dandart.co.uk>",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/dandart/freespeech/issues"
+  },
+  "homepage": "https://github.com/dandart/freespeech#readme"
+}

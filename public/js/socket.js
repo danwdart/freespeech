@@ -1,9 +1,11 @@
-$(document).ready(function() {
-betabud.online = {};
-var socket = io.connect('http://betabud.dandart.co.uk:8080');
+let freespeech = {
+    nickname: 'Anonymous'+String(Math.floor(1000000*Math.random())),
+    online: {}
+};
+
 function writeonline() {
     html = '';
-    $.each(betabud.online, function(k,v) {
+    $.each(freespeech.online, function(k,v) {
         html+= v+'<br/>';
     });
     $('.people').html(html);
@@ -12,39 +14,61 @@ function writemessage(data) {
     writeline(data.from + ' said: '+data.text);
 }
 function writeline(text) {
-    html = $('.chatlog').html();
-    $('.chatlog').html(html + text +'<br/>');
+    $('.chatlog').html(getchatlog() + text +'<br/>');
 }
-socket.on('connect', function() {
-    socket.emit('heartbeat', {name: betabud.nickname});
-    betabud.online[socket.id] = betabud.nickname;
-    writeonline();
+function clearchatlog() {
     $('.chatlog').html('');
-});
-socket.on('whosonline', function(data) {
-    betabud.online = data;
-    writeonline();
-});
-socket.on('offline', function(data) {
-    writeline(betabud.online[data.id] + ' is offline');
-    delete betabud.online[data.id];
-    writeonline();
-});
-socket.on('online', function(data) {
-    betabud.online[data.id] = data.name;
-    writeonline();
-    writeline(data.name + ' is online');
-});
-socket.on('message', function(data) {
-    writemessage(data);
-});
-$('#form #submit').click(function(event) {
-    event.preventDefault();
-    text = $('#chatline').val();
+}
+function getchatlog() {
+    return $('.chatlog').html();
+}
+function clearchatline() {
     $('#chatline').val('');
-    msg = {from:betabud.nickname, text:text};
-    socket.emit('message',msg);
-    writemessage(msg);
-    return false;
-});
+}
+function getchatline() {
+    return $('#chatline').val()
+}
+function genmessage(text) {
+    return {
+        from: freespeech.nickname,
+        text: text
+    };
+}
+
+$(document).ready(() => {
+    let socket = io.connect(window.location.host);
+
+    socket.on('connect', function() {
+        socket.emit('heartbeat', {name: freespeech.nickname});
+        freespeech.online[socket.id] = freespeech.nickname;
+        writeonline();
+        clearchatlog()
+    });
+    socket.on('whosonline', function(data) {
+        freespeech.online = data;
+        writeonline();
+    });
+    socket.on('offline', function(data) {
+        writeline(freespeech.online[data.id] + ' is offline');
+        delete freespeech.online[data.id];
+        writeonline();
+    });
+    socket.on('online', function(data) {
+        freespeech.online[data.id] = data.name;
+        writeonline();
+        writeline(data.name + ' is online');
+    });
+    socket.on('message', function(data) {
+        writemessage(data);
+    });
+
+    $('#form').submit((event) => {
+        event.preventDefault();
+        let msg = genmessage(getchatline());
+
+        clearchatline();
+
+        socket.emit('message', msg);
+        writemessage(msg);
+    });
 });
