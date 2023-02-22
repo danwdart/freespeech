@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/dandart/freespeech/issues"
   },
-  "homepage": "https://github.com/dandart/freespeech#readme"
+  "homepage": "https://github.com/dandart/freespeech#readme",
+  "dependencies": {
+    "@snyk/protect": "^1.1108.0"
+  }
 }
